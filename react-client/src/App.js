@@ -1,12 +1,17 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
 
+import React from 'react';
+import MainScreen from "./components/MainScreen";
+import {useState} from "react";
 function App() {
-  return (
-    <div className="App">
-        <h1>React App</h1>
-    </div>
-  );
+    // const game = new Game();
+
+    return (
+        <div className="App">
+            {/*<img src ={Background} />*/}
+            <MainScreen/>;
+        </div>
+    );
 }
 
 export default App;
+
