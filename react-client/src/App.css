@@ -37,5 +37,9 @@
   }
 }
 
-
+.my-component {
+  background-image: url('./images/download.jpg');
+  /*background-size: cover;*/
+  /*background-repeat: no-repeat;*/
+}
 

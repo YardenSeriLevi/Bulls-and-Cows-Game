@@ -1,30 +1,75 @@
-import { useState } from "react";
-import { Dropdown, DropdownButton } from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
+import NumberPicker from "./NumberPicker";
+import {useState} from "react";
 
-function NumberPicker(props) {
-    const { onChange } = props;
-    const [selectedValue, setSelectedValue] = useState("");
+function GuessInput(props)
+{
+    const [guess, setGuess] = useState(['', '', '', '']);
+    const [isError, setIsError] = useState(false);
+    const [result, setResult] = useState('');
+    function checkDuplicates(guess) {
+        const uniqueDigits = new Set(guess);
+        return uniqueDigits.size !== guess.length;
+    }
+    function handleGuessChange(index, value) {
+        const newGuess = [...guess];
+        newGuess[index] = value;
+        setGuess(newGuess);
 
-    function handleSelect(eventKey) {
-        setSelectedValue(eventKey);
-        onChange(eventKey);
+        // Check for duplicates only if all digits are selected
+        const allDigitsSelected = newGuess.every(val => val !== '');
+        if (allDigitsSelected) {
+            setIsError(checkDuplicates(newGuess));
+        }
+    }
+
+    function handleGuessCheck() {
+        let bulls = 0;
+        let cows = 0;
+        const numberArray = props.number.split('');
+        const guessArray = guess;
+        for (let i = 0; i < 4; i++) {
+            if (numberArray[i] === guessArray[i]) {
+                bulls++;
+            } else if (numberArray.includes(guessArray[i])) {
+                cows++;
+            }
+        }
+        setResult(`Bulls: ${bulls}, Cows: ${cows}`);
     }
 
     return (
-        <>
-            <DropdownButton
-                title={selectedValue || "Select a number"}
-                variant="info"
-                onSelect={handleSelect}
-            >
-                {[...Array(10).keys()].map((number) => (
-                    <Dropdown.Item key={number} eventKey={number}>
-                        {number}
-                    </Dropdown.Item>
-                ))}
-            </DropdownButton>
-        </>
+        <div>
+            {/*<p>Random number: {number}</p>*/}
+            {isError && <p style={{ color: 'red' }}>Error: You must select 4 different digits</p>}
+            <Row className="justify-content-md-center">
+                <Col className="col-auto">
+                    <NumberPicker
+                        onChange={(value) => handleGuessChange(0, value)}
+                    />
+                </Col >
+                <Col className="col-auto">
+                    <NumberPicker
+                        onChange={(value) => handleGuessChange(1, value)}
+                    />
+                </Col>
+                {/*<p></p>*/}
+                <Col className="col-auto">
+                    <NumberPicker
+                        onChange={(value) => handleGuessChange(2, value)}
+                    />
+                </Col>
+                <Col className="col-auto">
+                    <NumberPicker
+                        onChange={(value) => handleGuessChange(3, value)}
+                    />
+                </Col>
+            </Row>
+            <p></p>
+            <button type="button" className="btn btn-outline-primary" onClick={handleGuessCheck}>Check</button>
+            {result && <p>{result}</p>}
+        </div>
     );
 }
 
-export default NumberPicker;
+export default GuessInput ;
