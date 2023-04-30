@@ -25,7 +25,8 @@ public class ApiServlet extends HttpServlet {
         // your code here
 
         // note: this is necessary to allow cross-origin requests from the React frontend
-        // response.setHeader("Access-Control-Allow-Origin", "*");
+         response.setHeader("Access-Control-Allow-Origin", "*");
+         //
 
         // remove this line ! it's only for you to browse the template
         response.getWriter().println("You are not supposed to browse this page. It will be used for API calls.");

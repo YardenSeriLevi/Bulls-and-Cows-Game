@@ -14,7 +14,8 @@ function NumberPicker(props) {
         <>
             <DropdownButton title={selectedValue || "Select a number"}
                             variant="btn btn-outline-primary"
-                            onSelect={handleSelect}>
+                            onSelect={handleSelect}
+                            style={{ backgroundColor: "white" }}>
 
                 {[...Array(10).keys()].map((number) => (
                     <Dropdown.Item key={number} eventKey={number}>
@@ -25,4 +26,5 @@ function NumberPicker(props) {
         </>
     );
 }
+
 export default NumberPicker;
