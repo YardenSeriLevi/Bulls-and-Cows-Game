@@ -1,6 +1,6 @@
 import NumberPicker from "./GuessInput";
 import Background from '../images/1.png'
-import Game from "./Game";
+import Game from "./RandomNumber";
 import { useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import GameInstructions from "./GameInstructions";
