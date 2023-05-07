@@ -1,11 +1,9 @@
 package hac.javareact;
-
-import com.google.gson.Gson;
-
-import java.io.*;
-import java.util.Map;
-import javax.servlet.http.*;
-import javax.servlet.annotation.*;
+import java.io.IOException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /* You can delete this comment before submission - it's only here to help you get started.
 Your servlet should be available at "/java_react_war/api/highscores"
@@ -17,58 +15,18 @@ fetch("/java_react_war/api/highscores")
 @WebServlet(name = "ServletApi", value = "/api/highscores")
 public class ApiServlet extends HttpServlet {
     /**
-     *
      * @param request
      * @param response
      * @throws IOException
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        // your code here
-
-        // note: this is necessary to allow cross-origin requests from the React frontend
-         response.setHeader("Access-Control-Allow-Origin", "*");
-         //
-        response.setContentType("application/json");
-
-        // Allowing React client side development on a different server:
-        response.setHeader("Access-Control-Allow-Origin", "*");
-
-        try {
-            validateParameters(request.getParameterMap());
-
-            int currScore = Integer.parseInt(request.getParameter(CURRENT_SCORE));
-            String uName = Integer.parseInt(request.getParameter(USER_NAME));
-
-           //write to file
-
-            FileManager.instance.writeToFile()
-            // If we got here with no exception, then everything is okay, and we can
-            // fulfill the request.
-            response.setStatus(HttpServletResponse.SC_OK);
-            int result = leftOperand + rightOperand;
-
-            // convert result to json and send it to the client
-            Gson gson = new Gson();
-            String json = gson.toJson(new Result(result));
-            response.getWriter().write(json);
-
-        } catch (NumberFormatException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("operands must be integers");
-
-        } catch (MissingOperandException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write(e.getMessage());
-        }
-    }
-        // remove this line ! it's only for you to browse the template
         response.getWriter().println("You are not supposed to browse this page. It will be used for API calls.");
+
     }
+
 
     /**
-     *
      * @param request
      * @param response
      * @throws IOException
@@ -77,16 +35,16 @@ public class ApiServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // your code here
 
+
+        System.out.println("req =" +request);
+        System.out.println("mhkbkb");
         // note: this is necessary to allow cross-origin requests from the React frontend
-         response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setContentType("application/json");
+        // send JSON as the response
+        response.getWriter().write("text");
 
     }
 
-    private void validateParameters(Map<String, String[]> parameterMap) throws MissingOperandException {
-        if (!parameterMap.containsKey(PARAM_LEFT) || !parameterMap.containsKey(PARAM_RIGHT)) {
-            throw new MissingOperandException(PARAM_LEFT, PARAM_RIGHT);
-        }
-    }
 
     @Override
     public void init() {
@@ -96,3 +54,4 @@ public class ApiServlet extends HttpServlet {
     public void destroy() {
     }
 }
+

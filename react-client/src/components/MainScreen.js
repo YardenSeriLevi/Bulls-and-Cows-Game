@@ -1,30 +1,28 @@
 import { useState } from 'react';
 import NumberPicker from './GuessInput';
-import Background from '../images/1.png';
+import Background from '../images/4.png';
 import Game from './RandomNumber';
 import { Col, Container, Row } from 'react-bootstrap';
 import GameInstructions from './GameInstructions';
 import GuessInput from './GuessInput';
 import GuessResultTable from './GuessResultTable';
 import '../App.css';
+import HighScores from "./HighScores";
 
 function MainScreen() {
     const [number, setNumber] = useState('');
-    const [guessAttempts, setGuessAttempts] = useState([]);
+    const [score,setScore] =  useState('');
+    const [hasWon, setHasWon] = useState(false);
+
 
     function generateNumber() {
+        handleWin(false);
         setNumber(Game);
     }
 
-    function handleGuessSubmit(guess, result) {
-        setGuessAttempts([
-            ...guessAttempts,
-            {
-                guess: guess,
-                result: result,
-            },
-        ]);
-    }
+    const handleWin = (res) => {
+        setHasWon(res);
+    };
 
     return (
         <Container>
@@ -46,11 +44,15 @@ function MainScreen() {
                 </Col>
             </Row>
             <p></p>
-            <GuessInput number={number} onSubmit={handleGuessSubmit} />
-            <p>Random number: {number}</p>
+            {!hasWon &&<>
+                         <GuessInput number={number} onWin={handleWin} score = {setScore} />
+                         <p>Random number: {number}</p>
+                       </>}
+            {hasWon &&
+                <HighScores score = {score} />}
             {/*<GuessResultTable guessAttempts={guessAttempts} />*/}
         </Container>
-    );
+    )
 }
 
 export default MainScreen;

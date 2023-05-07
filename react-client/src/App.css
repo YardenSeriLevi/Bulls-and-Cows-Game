@@ -45,3 +45,7 @@
   background-color: white;
   border: 2px solid blue;
 }
+.background
+{
+  background-image: url('./images/pic.jpg');
+}

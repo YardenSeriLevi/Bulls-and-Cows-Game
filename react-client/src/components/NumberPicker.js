@@ -24,7 +24,7 @@ function NumberPicker(props) {
                 ))}
             </DropdownButton>
         </>
-    );
+    )
 }
 
 export default NumberPicker;
