@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 
+/**
+ * This component return the introduction of the game as a model
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function InstructionsModal() {
     const [show, setShow] = useState(false);
 

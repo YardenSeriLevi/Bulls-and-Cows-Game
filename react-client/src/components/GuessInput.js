@@ -3,6 +3,13 @@ import NumberPicker from "./NumberPicker";
 import { useState } from "react";
 import GuessResultTable from "./GuessResultTable";
 
+/**
+ * This component create 4 dropdown labels that the user shoult choose in any of them a number between 0-9
+ * then when the
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function GuessInput(props) {
     const [guess, setGuess] = useState(["", "", "", ""]);
     const [isError, setIsError] = useState(false);
