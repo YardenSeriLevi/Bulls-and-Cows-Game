@@ -1,15 +1,5 @@
-//
-//import hac.javareact.HighScoreException;
-//import hac.javareact.HighScoreManager;
-//import hac.javareact.Score;
-//
+//package hac.javareact;
 //import java.io.IOException;
-//import java.io.ObjectOutputStream;
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
-//import java.util.Collections;
-//import java.util.List;
-//import javax.servlet.ServletException;
 //import javax.servlet.annotation.WebServlet;
 //import javax.servlet.http.HttpServlet;
 //import javax.servlet.http.HttpServletRequest;
@@ -24,39 +14,44 @@
 //
 //@WebServlet(name = "ServletApi", value = "/api/highscores")
 //public class ApiServlet extends HttpServlet {
-//    private static final String SCORES_FILE = "scores.dat";
-//    private HighScoreManager highScoreManager;
+//    /**
+//     * @param request
+//     * @param response
+//     * @throws IOException
+//     */
+//    @Override
+//    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        response.getWriter().println("You are not supposed to browse this page. It will be used for API calls.");
 //
-//    public void HighScoreServlet() {
-//        Path scoresFilePath = Paths.get(getServletContext().getRealPath("."), SCORES_FILE);
-//        this.highScoreManager = HighScoreManager.getInstance(scoresFilePath);
+//    }
+//
+//
+//    /**
+//     * @param request
+//     * @param response
+//     * @throws IOException
+//     */
+//    @Override
+//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        // your code here
+//
+//
+//        System.out.println("req =" +request);
+//        System.out.println("mhkbkb");
+//        // note: this is necessary to allow cross-origin requests from the React frontend
+//        response.setContentType("application/json");
+//        // send JSON as the response
+//        response.getWriter().write("text");
+//
+//    }
+//
+//
+//    @Override
+//    public void init() {
 //    }
 //
 //    @Override
-//    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-//            throws ServletException, IOException {
-//        System.out.println("in do post");
-//        String username = req.getParameter("username");
-//        int score = Integer.parseInt(req.getParameter("score"));
-//        highScoreManager.addScore(username, score);
-//
-//        resp.setStatus(HttpServletResponse.SC_CREATED);
+//    public void destroy() {
 //    }
-//
-//    @Override
-//    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-//            throws ServletException, IOException {
-//        List<Score> highScores = highScoreManager.getHighScores();
-//        if (highScores == null) {
-//            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving high scores");
-//            return;
-//        }
-//        Collections.sort(highScores);
-//        List<Score> topHighScores = highScores.subList(0, Math.min(5, highScores.size()));
-//        ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());
-//        oos.writeObject(topHighScores);
-//        oos.flush();
-//        oos.close();
-//    }
-//
 //}
+//

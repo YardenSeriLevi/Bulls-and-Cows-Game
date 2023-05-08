@@ -3,7 +3,7 @@ import {Button, Form} from "react-bootstrap";
 
 function HighScores(props) {
     const [username, setUsername] = useState("");
-    const [score, setScore] = useState("");
+    // const [score, setScore] = useState("");
     const [highScores, setHighScores] = useState([]);
 
     useEffect(() => {
@@ -14,21 +14,26 @@ function HighScores(props) {
     }, []);
 
     const fetchHighScores = async () => {
-        const response = await fetch("/highscores");
+        const response = await fetch("/api/highscores");
         const data = await response.json();
         setHighScores(data);
     };
 
     function handleResponse(response) {
 
-        console.log("in handleResponse");
+
         console.log(response);
     }
     function handleAddScore(e){
-        const URL = "/api/highscores";
+        const form = e.target;
+        const formData = new FormData(form);
+        const enteredUsername = formData.get("username");
+
+        console.log("in handleResponse username:" +enteredUsername);
+        const URL = "api/highscores";
         e.preventDefault();
         let params = {
-            name: props.username,
+            username: enteredUsername,
             score: props.score
         };
 
@@ -83,7 +88,8 @@ function HighScores(props) {
                 <h2> You won! your score is: {props.score}  </h2>
                 <Form.Group className="mb-3" >
                     <Form.Label> You may enter your name below to record your score</Form.Label>
-                    <Form.Control type="text" placeholder="Enter your name" />
+                    <Form.Control type="text" placeholder="Enter your name" name="username"/>
+
                     <Form.Text className="text-muted">
                     </Form.Text>
                 </Form.Group>

@@ -43,23 +43,82 @@ package hac.javareact;//package hac.javareact;
 //}
 //
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
+//import java.io.IOException;
+//import java.io.ObjectInputStream;
+//import java.io.ObjectOutputStream;
+//import java.nio.file.Files;
+//import java.nio.file.Path;
+//import java.util.Collections;
+//import java.util.List;
+//
+//public  class HighScoreManager {
+//
+//    private static HighScoreManager instance;
+//    private final Path scoresFilePath;
+//    private List<Score> highScores;
+//
+//    private HighScoreManager(Path scoresFilePath) {
+//        this.scoresFilePath = scoresFilePath;
+//        loadHighScores();
+//    }
+//
+//    public static synchronized HighScoreManager getInstance(Path scoresFilePath) {
+//        if (instance == null) {
+//            instance = new HighScoreManager(scoresFilePath);
+//        }
+//        return instance;
+//    }
+//
+//    public synchronized void addScore(String username, int score)  {
+//        Score newScore = new Score(username, score);
+//        if (!highScores.contains(newScore)) {
+//            highScores.add(newScore);
+//            saveHighScores();
+//        }
+//
+//    }
+//
+//    public synchronized List<Score> getHighScores() {
+//        loadHighScores();
+//        return highScores;
+//    }
+//
+//    private void loadHighScores() {
+//        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(scoresFilePath))) {
+//            highScores = (List<Score>) ois.readObject();
+//        } catch ( ClassNotFoundException | IOException e) {
+//            // If the scores file does not exist, create an empty list
+//            highScores = Collections.emptyList();
+//        }
+//    }
+//
+//    private void saveHighScores() {
+//        try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(scoresFilePath))) {
+//            oos.writeObject(highScores);
+//        } catch (IOException e) {
+//            System.err.println("Error saving high scores: " + e.getMessage());
+//        }
+//    }
+//}
+
+
+//package hac.javareact;
+
+import java.io.*;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
-public  class HighScoreManager {
+public class HighScoreManager {
 
+    private static final String SCORES_FILE = "scores.dat";
     private static HighScoreManager instance;
-    private final Path scoresFilePath;
     private List<Score> highScores;
+    private Path scoresFilePath;
 
     private HighScoreManager(Path scoresFilePath) {
         this.scoresFilePath = scoresFilePath;
-        loadHighScores();
+        this.highScores = loadHighScores();
     }
 
     public static synchronized HighScoreManager getInstance(Path scoresFilePath) {
@@ -69,34 +128,35 @@ public  class HighScoreManager {
         return instance;
     }
 
-    public synchronized void addScore(String username, int score)  {
+    public void addScore(String username, int score) throws HighScoreException {
         Score newScore = new Score(username, score);
         if (!highScores.contains(newScore)) {
             highScores.add(newScore);
             saveHighScores();
+        } else {
+            throw new HighScoreException("Duplicate username. Score not added.");
         }
-
     }
 
-    public synchronized List<Score> getHighScores() {
-        loadHighScores();
+    public List<Score> getHighScores() {
         return highScores;
     }
 
-    private void loadHighScores() {
-        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(scoresFilePath))) {
-            highScores = (List<Score>) ois.readObject();
-        } catch ( ClassNotFoundException | IOException e) {
-            // If the scores file does not exist, create an empty list
-            highScores = Collections.emptyList();
+    private List<Score> loadHighScores() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(scoresFilePath.toFile()))) {
+            return (List<Score>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            // File does not exist or could not be read, return an empty list
+            return new ArrayList<>();
         }
     }
 
-    private void saveHighScores() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(scoresFilePath))) {
+    private void saveHighScores() throws HighScoreException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(scoresFilePath.toFile()))) {
             oos.writeObject(highScores);
         } catch (IOException e) {
-            System.err.println("Error saving high scores: " + e.getMessage());
+            throw new HighScoreException("Error saving high scores.");
         }
     }
 }
+

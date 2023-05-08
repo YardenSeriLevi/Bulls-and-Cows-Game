@@ -36,17 +36,62 @@ import java.util.Objects;
 //}
 // A simple data class to represent a score with a user name and number of guesses
 // A simple data class to represent a score with a user name and number of guesses
-public class Score implements Serializable, Comparable<Score> {
-    private final String userName;
-    private final int score;
+//public class Score implements Serializable, Comparable<Score> {
+//    private final String userName;
+//    private final int score;
+//
+//    public Score(String userName, int score) {
+//        this.userName = userName;
+//        this.score = score;
+//    }
+//
+//    public String getUserName() {
+//        return userName;
+//    }
+//
+//    public int getScore() {
+//        return score;
+//    }
+//
+//    @Override
+//    public int compareTo(Score other) {
+//        return Integer.compare(score, other.score);
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        if (this == obj) {
+//            return true;
+//        }
+//        if (obj == null || getClass() != obj.getClass()) {
+//            return false;
+//        }
+//        Score other = (Score) obj;
+//        return Objects.equals(userName, other.userName) && score == other.score;
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        return Objects.hash(userName, score);
+//    }
+//}
 
-    public Score(String userName, int score) {
-        this.userName = userName;
+//package hac.javareact;
+
+import java.io.Serializable;
+
+public class Score implements Comparable<Score>, Serializable {
+
+    private String username;
+    private int score;
+
+    public Score(String username, int score) {
+        this.username = username;
         this.score = score;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public int getScore() {
@@ -55,7 +100,7 @@ public class Score implements Serializable, Comparable<Score> {
 
     @Override
     public int compareTo(Score other) {
-        return Integer.compare(score, other.score);
+        return Integer.compare(this.score, other.score);
     }
 
     @Override
@@ -67,12 +112,13 @@ public class Score implements Serializable, Comparable<Score> {
             return false;
         }
         Score other = (Score) obj;
-        return Objects.equals(userName, other.userName) && score == other.score;
+        return username.equals(other.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userName, score);
+        return username.hashCode();
     }
 }
+
 

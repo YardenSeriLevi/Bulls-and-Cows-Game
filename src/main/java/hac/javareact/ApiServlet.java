@@ -1,57 +1,76 @@
 package hac.javareact;
-import java.io.IOException;
+
+import java.io.*;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/* You can delete this comment before submission - it's only here to help you get started.
-Your servlet should be available at "/java_react_war/api/highscores"
-assuming you don't modify the application's context path (/java_react_war).
-on the client side, you can send request to the servlet using:
-fetch("/java_react_war/api/highscores")
-*/
-
-@WebServlet(name = "ServletApi", value = "/api/highscores")
+@WebServlet(name = "ApiServlet", value = "/api/highscores")
 public class ApiServlet extends HttpServlet {
-    /**
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.getWriter().println("You are not supposed to browse this page. It will be used for API calls.");
 
+    private static final String SCORES_FILE = "scores.dat";
+    private HighScoreManager highScoreManager;
+
+    @Override
+    public void init() throws ServletException {
+        Path scoresFilePath = Paths.get(getServletContext().getRealPath("."), SCORES_FILE);
+        this.highScoreManager = HighScoreManager.getInstance(scoresFilePath);
     }
 
-
-    /**
-     * @param request
-     * @param response
-     * @throws IOException
-     */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // your code here
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setHeader("Access-Control-Allow-Origin", "*");
 
+        List<Score> highScores = highScoreManager.getHighScores();
+        if (highScores == null) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error retrieving high scores");
+            return;
+        }
 
-        System.out.println("req =" +request);
-        System.out.println("mhkbkb");
-        // note: this is necessary to allow cross-origin requests from the React frontend
+        Collections.sort(highScores);
+        List<Score> topHighScores = highScores.subList(0, Math.min(5, highScores.size()));
+
+        // Convert topHighScores to JSON
+        String json = convertHighScoresToJson(topHighScores);
+
         response.setContentType("application/json");
-        // send JSON as the response
-        response.getWriter().write("text");
-
+        response.getWriter().write(json);
     }
 
-
     @Override
-    public void init() {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("in post");
+        String username = req.getParameter("username");
+        int score = Integer.parseInt(req.getParameter("score"));
+        System.out.println("in post score:" + score + "u name: " + username);
+
+
+        try {
+            highScoreManager.addScore(username, score);
+            resp.setStatus(HttpServletResponse.SC_CREATED);
+        } catch (HighScoreException e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @Override
     public void destroy() {
+        // Perform any cleanup tasks if needed
+    }
+
+    private String convertHighScoresToJson(List<Score> highScores) {
+        // Convert the highScores list to JSON format
+        // You can use a JSON library like Gson or Jackson for this purpose
+        // Here's an example using Gson:
+        // Gson gson = new Gson();
+        // return gson.toJson(highScores);
+
+        // Dummy implementation (returns an empty JSON array)
+        return "[]";
     }
 }
-
