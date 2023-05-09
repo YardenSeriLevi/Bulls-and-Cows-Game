@@ -1,5 +1,7 @@
 package hac.javareact;
 
+import com.google.gson.Gson;
+
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,6 +26,7 @@ public class ApiServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("in get");
         response.setHeader("Access-Control-Allow-Origin", "*");
 
         List<Score> highScores = highScoreManager.getHighScores();
@@ -34,6 +37,12 @@ public class ApiServlet extends HttpServlet {
 
         Collections.sort(highScores);
         List<Score> topHighScores = highScores.subList(0, Math.min(5, highScores.size()));
+
+        System.out.println("List of high scores: size: "+topHighScores.size());
+
+        for (Score score : topHighScores) {
+            System.out.println("score="+score.getScore()+"u name"+score.getUsername());
+        }
 
         // Convert topHighScores to JSON
         String json = convertHighScoresToJson(topHighScores);
@@ -56,6 +65,7 @@ public class ApiServlet extends HttpServlet {
         } catch (HighScoreException e) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
+        System.out.println("after");
     }
 
     @Override
@@ -67,10 +77,7 @@ public class ApiServlet extends HttpServlet {
         // Convert the highScores list to JSON format
         // You can use a JSON library like Gson or Jackson for this purpose
         // Here's an example using Gson:
-        // Gson gson = new Gson();
-        // return gson.toJson(highScores);
-
-        // Dummy implementation (returns an empty JSON array)
-        return "[]";
+         Gson gson = new Gson();
+         return gson.toJson(highScores);
     }
 }

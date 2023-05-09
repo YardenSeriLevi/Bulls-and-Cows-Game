@@ -105,6 +105,7 @@ package hac.javareact;//package hac.javareact;
 //package hac.javareact;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,11 +125,13 @@ public class HighScoreManager {
     public static synchronized HighScoreManager getInstance(Path scoresFilePath) {
         if (instance == null) {
             instance = new HighScoreManager(scoresFilePath);
+            System.out.println("path "+scoresFilePath);
         }
         return instance;
     }
 
     public void addScore(String username, int score) throws HighScoreException {
+        System.out.println("in addScore");
         Score newScore = new Score(username, score);
         if (!highScores.contains(newScore)) {
             highScores.add(newScore);
@@ -152,7 +155,7 @@ public class HighScoreManager {
     }
 
     private void saveHighScores() throws HighScoreException {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(scoresFilePath.toFile()))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(Files.newOutputStream(scoresFilePath.toFile().toPath()))) {
             oos.writeObject(highScores);
         } catch (IOException e) {
             throw new HighScoreException("Error saving high scores.");
