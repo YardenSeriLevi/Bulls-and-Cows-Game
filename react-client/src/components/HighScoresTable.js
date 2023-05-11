@@ -1,7 +1,10 @@
 import React from "react";
-import {Table} from "react-bootstrap";
+import { Table } from "react-bootstrap";
 
 function HighScoresTable({ highScores }) {
+    // Sort the highScores array in ascending order based on the score
+    const sortedScores = highScores.sort((a, b) => a.score - b.score);
+
     return (
         <Table striped bordered hover className="table-blue">
             <thead>
@@ -12,7 +15,7 @@ function HighScoresTable({ highScores }) {
             </tr>
             </thead>
             <tbody>
-            {highScores.map((score, index) => (
+            {sortedScores.map((score, index) => (
                 <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{score.username}</td>

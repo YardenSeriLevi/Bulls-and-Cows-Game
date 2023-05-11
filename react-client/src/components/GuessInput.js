@@ -14,7 +14,6 @@ function GuessInput(props) {
     const [guess, setGuess] = useState(["", "", "", ""]);
     const [isError, setIsError] = useState(false);
     const [result, setResult] = useState("");
-    const [guessAttempts, setGuessAttempts] = useState([]);
     const [numGuesses, setNumGuesses] = useState(0);
 
     function checkDuplicates(guess) {
@@ -35,8 +34,14 @@ function GuessInput(props) {
     }
 
     function handleGuessCheck() {
-        if(!props.number || checkDuplicates(guess))
-            return
+        if (!props.number || checkDuplicates(guess)) return;
+
+        if(props.guessAttempts === []);
+        {
+            setNumGuesses(0);
+            console.log("in props")
+        }
+
         let bulls = 0;
         let cows = 0;
         const numberArray = props.number.split("");
@@ -49,21 +54,31 @@ function GuessInput(props) {
             }
         }
         setResult(`Bulls: ${bulls}, Cows: ${cows}`);
-        setNumGuesses(numGuesses + 1);
 
         if (bulls === 4) {
-            setResult(`You won! your score is: ${numGuesses + 1} `);
-            setGuessAttempts([]);
+            setResult(`You won! Your score is: ${numGuesses}`);
+            props.setGuessAttempts([]);
             setNumGuesses(0);
             props.onWin(true);
-            props.score(numGuesses + 1)
-        } else if(guessArray.length === 4) {
-            setGuessAttempts([
-                ...guessAttempts,
-                { guess: guessArray, result: `Bulls: ${bulls}, Cows: ${cows}` },
-            ])
+            props.score(numGuesses + 1);
+        } else if (guessArray.length === 4) {
+            const existingGuess =  props.guessAttempts.find(
+                (attempt) => attempt.guess.join("") === guessArray.join("")
+            );
+
+            if (!existingGuess) {
+                const updatedGuessAttempts = [
+                    ... props.guessAttempts,
+                    { guess: guessArray, result: `Bulls: ${bulls}, Cows: ${cows}` },
+                ];
+                props.setGuessAttempts(updatedGuessAttempts);
+                setNumGuesses(numGuesses + 1);
+            }
         }
     }
+
+
+
 
     return (
         <div>
@@ -94,7 +109,7 @@ function GuessInput(props) {
             >
                 Check
             </button>
-            {(!(guess.some((val) => val === ""))&& result ) && <GuessResultTable guessAttempts={guessAttempts} />}
+            {(!(guess.some((val) => val === ""))&& result ) && <GuessResultTable guessAttempts={props.guessAttempts} />}
 
         </div>
     );

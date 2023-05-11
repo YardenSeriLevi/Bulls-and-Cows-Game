@@ -4,35 +4,46 @@ import HighScoresTable from "./HighScoresTable";
 
 function HighScores(props) {
     const [highScores, setHighScores] = useState([]);
+    const [error, setError] = useState("");
 
-    useEffect(() => {
-        fetchHighScores();
-    }, []);
+    const errorMessage = "HO HO looks like we can't connect to the server. Please try again.";
 
     const fetchHighScores = async () => {
-        const response = await fetch("/api/highscores");
-        const data = await response.json();
-        data.forEach(score => {
-            console.log(score.username, score.score);
-        });
-        setHighScores(data);
+        try {
+            const response = await fetch("/api/highscores");
+            if (response.ok) {
+                setError("");
+                const data = await response.json();
+                setHighScores(data);
+            } else {
+                setError(errorMessage);
+            }
+        } catch (error) {
+            setError(errorMessage);
+        }
     };
 
     async function handleResponse(response) {
         if (response.ok) {
+            setError("");
             await fetchHighScores();
         } else {
-            console.log("Error adding score");
+            setError(errorMessage);
         }
     }
 
     function handleAddScore(e) {
+
+        e.preventDefault();
         const form = e.target;
         const formData = new FormData(form);
         const enteredUsername = formData.get("username");
+        if (!enteredUsername) {
+            setError("Please enter a username.");
+            return;
+        }
 
         const URL = "api/highscores";
-        e.preventDefault();
         let params = {
             username: enteredUsername,
             score: props.score
@@ -47,7 +58,7 @@ function HighScores(props) {
             body: new URLSearchParams(params).toString()
         })
             .then(handleResponse)
-            .catch(() => {});
+            .catch(() => setError(errorMessage));
     }
 
     return (
@@ -65,8 +76,8 @@ function HighScores(props) {
                     Submit
                 </Button>
             </Form>
-
-            <HighScoresTable highScores={highScores} />
+            {error && <p> {error} </p>}
+            {!error && <HighScoresTable highScores={highScores} />}
         </>
     );
 }
