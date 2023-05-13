@@ -53,7 +53,6 @@ function MainScreen() {
             </>}
             {hasWon &&
                 <HighScores score={score}/>}
-            {/*<GuessResultTable guessAttempts={guessAttempts} />*/}
         </Container>
     )
 }

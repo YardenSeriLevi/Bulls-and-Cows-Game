@@ -10,7 +10,6 @@ function GuessResultTable({ guessAttempts }) {
         <Table striped bordered hover className="table-blue">
             <thead>
             <tr>
-                <th>#</th>
                 <th>Guess</th>
                 <th>Result</th>
             </tr>
@@ -18,7 +17,6 @@ function GuessResultTable({ guessAttempts }) {
             <tbody>
             {reversedAttempts.map((attempt, index) => (
                 <tr key={index}>
-                    <td>{reversedAttempts.length - index}</td>
                     <td>{attempt.guess.join(', ')}</td>
                     <td>{attempt.result}</td>
                 </tr>
