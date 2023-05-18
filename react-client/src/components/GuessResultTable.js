@@ -2,6 +2,12 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import '../App.css';
 
+/**
+ * GuessResultTable component displays the table of guess attempts and their results.
+ *
+ * @param {Array} guessAttempts - Array of guess attempts
+ * @returns {JSX.Element} - The rendered GuessResultTable component
+ */
 function GuessResultTable({ guessAttempts }) {
     // Reverse the guessAttempts array to display the last guess first
     const reversedAttempts = guessAttempts.slice().reverse();

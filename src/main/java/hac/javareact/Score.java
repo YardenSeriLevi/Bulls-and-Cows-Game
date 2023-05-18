@@ -119,6 +119,10 @@ public class Score implements Comparable<Score>, Serializable {
     public int hashCode() {
         return username.hashCode();
     }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
 }
 
 

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiServlet extends HttpServlet {
 
     private static final String SCORES_FILE = "scores.dat";
-    private  final String errorMassage = "HO HO looks like we can't connect to the server. Please try again.";
+    private final String errorMessage = "HO HO looks like we can't connect to the server. Please try again.";
     private HighScoreManager highScoreManager;
 
     @Override
@@ -29,9 +29,13 @@ public class ApiServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setHeader("Access-Control-Allow-Origin", "*");
 
-        List<Score> highScores = highScoreManager.getHighScores();
+        List<Score> highScores;
+        synchronized (highScoreManager) {
+            highScores = highScoreManager.getHighScores();
+        }
         if (highScores == null) {
-            setErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMassage);
+            setErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMessage);
+            return;
         }
 
         Collections.sort(highScores);
@@ -46,22 +50,27 @@ public class ApiServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         String username = req.getParameter("username");
         int score = Integer.parseInt(req.getParameter("score"));
 
         try {
-            highScoreManager.addScore(username, score);
-            resp.setStatus(HttpServletResponse.SC_CREATED);
+            boolean added;
+            synchronized (highScoreManager) {
+                added = highScoreManager.addScore(username.toLowerCase(), score);
+            }
+            if (added) {
+                resp.setStatus(HttpServletResponse.SC_CREATED);
+            }
         } catch (HighScoreException e) {
-            setErrorResponse(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMassage);
+            setErrorResponse(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, errorMessage);
         }
     }
 
     private String convertHighScoresToJson(List<Score> highScores) {
-         Gson gson = new Gson();
-         return gson.toJson(highScores);
+        Gson gson = new Gson();
+        return gson.toJson(highScores);
     }
+
     private void setErrorResponse(HttpServletResponse response, int statusCode, String errorMessage) throws IOException {
         response.setStatus(statusCode);
         response.setContentType("application/json");
