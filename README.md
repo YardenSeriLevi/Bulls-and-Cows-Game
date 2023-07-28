@@ -1,11 +1,13 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/YDg-_nm7)
-## Authors
-* Yarden Seri Levi , Email:yardenco@edu.hac.ac.il
 
-* Anael Mizrahi ,Email: anaelmi@edu.hac.ac.il
 ## Explanations
-
-(Explain here your project)
+Bulls and Cows game:  
+Here are the game instructions:
+Choose 4 digits between 0 and 9
+The digits must be unique (no repeats)
+Click "Check" to see how many bulls and cows you have
+Bulls are correct digits in the correct position
+Cows are correct digits in the wrong position
 
 ## How to use this template
 This is the template for a project where front-end and back-end are separated.
